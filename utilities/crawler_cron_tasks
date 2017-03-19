@@ -1,0 +1,10 @@
+# crontabs to clean crawler leftover
+# copy this file  under  /etc/cron.d/
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+*/20 * * * * root find /data/temp_files/crawler -mmin +20 -exec rm -f '{}' ';' >/var/log/clean_files.log 2>&1
+* */5 * * * root find /data/crawler_data -mtime +10 -exec rm -f '{}' ';' >/var/log/clean_files.log 2>&1
+
+*/4 * * * * root /home/mvergili/kill.py
