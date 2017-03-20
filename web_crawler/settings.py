@@ -83,18 +83,16 @@ FEED_FORMAT = 'csv'
 # SQL Connection
 ######################################################################################################
 SQL_HOST = ''
-
 SQL_USER = ''
 SQL_PASSWORD = ''
 
 
-COOKIES_DEBUG = True
-
-
-
 ######################################################################################################
-#
+# Google Cloud
 ######################################################################################################
+GOOGLE_APPLICATION_CREDENTIALS = ''
+GOOGLE_APPENGINE_DIR = ''
+GOOGLE_APPID = ''
 
 try:
    from local_settings import *
@@ -104,7 +102,6 @@ except ImportError:
 
 if __name__ == "__main__" :
 
-    print ('SQL_HOST: ' + SQL_HOST)
-    print ('SQL_USER: ' + SQL_USER)
-    print ('SQL_PASSWORD: ' + SQL_PASSWORD)
-    print ('cred: ' + AWS_ACCESS_KEY_ID)
+    print ('GOOGLE_APPLICATION_CREDENTIALS: ' + GOOGLE_APPLICATION_CREDENTIALS)
+    print ('GOOGLE_APPENGINE_DIR: ' + GOOGLE_APPENGINE_DIR)
+
