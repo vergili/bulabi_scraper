@@ -4,6 +4,10 @@ from scrapy import signals
 from scrapy.conf import settings
 from scrapy.xlib.pydispatch import dispatcher
 try:
+    sys.path.append(settings['GOOGLE_APPENGINE_DIR'])
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = settings['GOOGLE_APPLICATION_CREDENTIALS']
+    import dev_appserver
+    dev_appserver.fix_sys_path()
     from google.appengine.ext import ndb
     from google.appengine.ext.remote_api import remote_api_stub
 except ImportError:
@@ -21,7 +25,7 @@ class VideoPipeline(object):
 
     def process_item(self, item, spider):
 
-        from video_model import Video
+        from data.gcloud.video_model import Video
 
         remote_api_stub.ConfigureRemoteApiForOAuth(
             '{}.appspot.com'.format(settings['GOOGLE_APPID']), '/_ah/remote_api')
@@ -31,3 +35,4 @@ class VideoPipeline(object):
         Video().insert_video(**item)
 
         return item
+

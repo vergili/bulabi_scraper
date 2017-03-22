@@ -17,10 +17,11 @@ class YoutubeComSpider(scrapy.Spider):
             'web_crawler.spiders.video_pipeline.VideoPipeline': 1,
         },
         'DOWNLOAD_TIMEOUT': 60,
+        'DOWNLOAD_DELAY': 5
     }
 
     def start_requests(self):
-        for query in ['mehmet']:
+        for query in [u'cubbeli+ahmet+hoca']:
             url = 'https://www.youtube.com/results?q=' + query
 
             yield Request(url)
@@ -36,26 +37,44 @@ class YoutubeComSpider(scrapy.Spider):
             selector = selectors.eq(k)
             item = {}
 
-            title = selector('.yt-lockup-title').text()
+            # Unicode problem
+            # http://stackoverflow.com/questions/1177316/decoding-double-encoded-utf8-in-python
 
-            title = title.encode('UTF-8')
+            title = selector('.yt-lockup-title a').text()
+            title = title.encode('raw_unicode_escape').decode('utf-8')
+            item['title'] = title
 
-            print title
-
-            item['title'] = selector('.yt-lockup-title').text().encode('UTF-8')
-
-            print item['title']
-
-            item['content'] = selector('.yt-lockup-description').text()
+            content = selector('.yt-lockup-description').text()
+            content = content.encode('raw_unicode_escape').decode('utf-8')
+            item['content'] = content
 
             url = selector('.yt-lockup-title a').attr('href')
 
             item['url'] = 'https://www.youtube.com/embed/' + url.split('v=')[-1]
 
-            picture = selector('.yt-thumb-simple img').attr('src')
+            picture = selector('.yt-thumb-simple img').attr('data-thumb')
+
+            if picture is None:
+                picture = selector('.yt-thumb-simple img').attr('src')
+
             item['picture'] = picture.split('?')[0]
             item['category'] = ''
             item['country'] = 'TR'
+
+            duration_text = selector('.accessible-description').text()
+            duration_text = duration_text.split(':')
+
+            duration = -1
+            if len(duration_text) == 3:
+                duration = int(duration_text[1].strip())*60 + \
+                           int(duration_text[2].rstrip('.'))
+            elif len(duration_text) == 4:
+                duration = int(duration_text[1].strip())*3600 + \
+                           int(duration_text[2].strip())*60 + \
+                           int(duration_text[3].rstrip('.'))
+
+            item['duration'] = duration
+
 
             yield item
 
