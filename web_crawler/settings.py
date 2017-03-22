@@ -93,6 +93,7 @@ SQL_PASSWORD = ''
 GOOGLE_APPLICATION_CREDENTIALS = ''
 GOOGLE_APPENGINE_DIR = ''
 GOOGLE_APPID = ''
+GMAIL_PASSWORD = ''
 
 try:
    from local_settings import *

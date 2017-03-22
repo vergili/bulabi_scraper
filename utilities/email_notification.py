@@ -2,6 +2,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from scrapy.conf import settings
 import logging
 
 
@@ -13,7 +14,7 @@ class EmailNotification(object):
 
         # TODO create an email
         gmailUser = 'automated.search@gmail.com'
-        gmailPassword = 'automated.2016'
+        gmailPassword = settings['GMAIL_PASSWORD']
 
         msg = MIMEMultipart()
         msg['From'] = gmailUser
